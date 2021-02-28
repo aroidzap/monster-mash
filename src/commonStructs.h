@@ -15,6 +15,7 @@
 #ifndef COMMONSTRUCTS_H
 #define COMMONSTRUCTS_H
 
+#include <GL/glew.h>
 #include <miscutils/opengltools.h>
 
 #include <Eigen/Dense>
@@ -154,6 +155,10 @@ struct CameraData {
   Eigen::Vector2d rotPrev = Eigen::Vector2d::Zero();
   Eigen::Vector2d translateView = Eigen::Vector2d::Zero();
   Eigen::Vector2d transPrev = Eigen::Vector2d::Zero();
+
+  CameraData() { }
+  CameraData(float rotVer, float rotHor, Eigen::Vector2d rotPrev) :
+    rotVer(rotVer), rotHor(rotHor), rotPrev(rotPrev) {}
 };
 
 #endif  // COMMONSTRUCTS_H

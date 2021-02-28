@@ -14,6 +14,7 @@
 
 #include "mywindow.h"
 
+#include <GL/glew.h>
 #include <miscutils/opengltools.h>
 
 #include <iostream>
@@ -53,6 +54,12 @@ int MyWindow::init(const std::string& windowTitle) {
     return 1;
   }
 
+  // glew
+  GLenum err = glewInit();
+  if (GLEW_OK != err) {
+    std::cerr << "GLEW Error: " << glewGetErrorString(err) << std::endl;
+  }
+
   renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
   if (renderer == nullptr) {
     cerr << "SDL_CreateRenderer error: " << SDL_GetError() << endl;
@@ -90,7 +97,7 @@ void MyWindow::initOpenGLBuffers() {
       loadShaders(vertexShaderSrc.c_str(), fragmentShaderSrc.c_str());
 
   // init buffers for meshes
-  glGenVertexArraysOES(1, &glData.VAO);  // extension for OpenGL ES 2.0
+  glGenVertexArrays(1, &glData.VAO);  // extension for OpenGL ES 2.0
   glGenBuffers(1, &glData.VBO_V);
   glGenBuffers(1, &glData.VBO_T);
   glGenBuffers(1, &glData.VBO_F);
@@ -101,7 +108,7 @@ void MyWindow::initOpenGLBuffers() {
   glData.T.resize(4, 2);
   glData.T << 0, 0, 1, 0, 1, 1, 0, 1;
   // fill buffers
-  glBindVertexArrayOES(glData.VAO);  // extension for OpenGL ES 2.0
+  glBindVertexArray(glData.VAO);  // extension for OpenGL ES 2.0
   // position
   GLint id;
   glBindBuffer(GL_ARRAY_BUFFER, glData.VBO_V);
@@ -138,7 +145,7 @@ void MyWindow::initOpenGLBuffers() {
 
 void MyWindow::destroyOpenGLBuffers() {
   // destroy buffers
-  glDeleteVertexArraysOES(1, &glData.VAO);
+  glDeleteVertexArrays(1, &glData.VAO);
   glDeleteBuffers(1, &glData.VBO_V);
   glDeleteBuffers(1, &glData.VBO_T);
   glDeleteBuffers(1, &glData.VBO_F);

@@ -80,13 +80,15 @@ if (CMAKE_CXX_COMPILER MATCHES "em\\+\\+$")
     set(CMAKE_C_FLAGS_RELWITHDEBINFO "-O2 -g")
     set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
 else()
-    message("Compiling for Linux")
-    # SDL2
+    message("Compiling for Linux/Windows")
     find_package(SDL2 REQUIRED)
-    set(LINKER_FLAGS ${LINKER_FLAGS} -lpthread)
+    find_package(Threads REQUIRED)
+    set(LINKER_FLAGS ${LINKER_FLAGS} Threads::Threads SDL2::SDL2 SDL2::SDL2main)
 
-    set(CMAKE_C_FLAGS_RELWITHDEBINFO "-O2 -g")
-    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
+    if (NOT MSVC) 
+        set(CMAKE_C_FLAGS_RELWITHDEBINFO "-O2 -g")
+        set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
+    endif ()
 
     set(DEFINES
 #        ENABLE_DEBUG_CMD_IMG
@@ -94,21 +96,31 @@ else()
         ENABLE_DEBUG_CMD_MM
         )
 
+    if (MSVC) 
+        set(DEFINES ${DEFINES} _USE_MATH_DEFINES)
+    endif()
+    
+    find_package(GLEW REQUIRED)
     find_package(OpenGL REQUIRED)
 endif()
 
-set(COMPILER_FLAGS ${COMPILER_FLAGS}
-    -Wno-sign-compare -Werror=return-type -Wno-narrowing
-)
+if(NOT MSVC)
+    set(COMPILER_FLAGS ${COMPILER_FLAGS}
+        -Wno-sign-compare -Werror=return-type -Wno-narrowing
+    )
+endif()
 
 set(LINKER_FLAGS ${LINKER_FLAGS}
     ${SDL2_LIBRARIES}
+    GLEW::GLEW
 )
 
-execute_process(COMMAND date +%y%m%d
-                OUTPUT_VARIABLE APP_VERSION_VAR
-                OUTPUT_STRIP_TRAILING_WHITESPACE)
+set_target_properties(GLEW::GLEW SDL2::SDL2 SDL2::SDL2main PROPERTIES
+    MAP_IMPORTED_CONFIG_MINSIZEREL Release
+    MAP_IMPORTED_CONFIG_RELWITHDEBINFO Release
+)
 
+string(TIMESTAMP APP_VERSION_VAR %y%m%d)
 message("MM version: ${APP_VERSION_VAR}")
 
 set(DEFINES ${DEFINES}
@@ -142,8 +154,6 @@ set(INCLUDEPATH
     ${SDL2_INCLUDE_DIRS}
 )
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 
 add_executable(monstermash ${SOURCES} ${HEADERS})
@@ -151,3 +161,4 @@ target_compile_definitions(monstermash PRIVATE ${DEFINES} ${DEFINES_OPENGL} ${DE
 target_include_directories(monstermash PRIVATE ${INCLUDEPATH})
 target_link_libraries(monstermash ${LINKER_FLAGS} ${LINKER_FLAGS_OPENGL} ${OPENGL_LIBRARIES})
 target_compile_options(monstermash PRIVATE ${COMPILER_FLAGS} ${COMPILER_FLAGS_OPENGL})
+target_compile_features(monstermash PRIVATE cxx_std_17)

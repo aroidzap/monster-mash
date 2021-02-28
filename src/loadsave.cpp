@@ -14,6 +14,7 @@
 
 #include "loadsave.h"
 
+#include <GL/glew.h>
 #include <igl/writeOBJ.h>
 #include <miscutils/fsutils.h>
 #include <miscutils/macros.h>
@@ -652,7 +653,7 @@ void loadAllFromZip(const std::string &zipFn, const int viewportW,
     const char *name = zip_entry_name(zip);
     auto path = filesystem::path(name);
     if (path.filename() == "_org_000.png") {
-      dir = path.parent_path();
+      dir = path.parent_path().string();
       if (!dir.empty()) dir += "/";
       break;
     }

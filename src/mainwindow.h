@@ -152,7 +152,7 @@ class MainWindow : public MyWindow {
   std::string progressMessage = "";
   bool showMessages = true;
   bool middleMouseSimulation = false;
-  std::string datadirname = "../../data/";
+  std::string datadirname = "data/";
   bool mousePressed = false;
   Cu bgColor = Cu{240, 240, 240, 255};
 
@@ -261,8 +261,8 @@ class MainWindow : public MyWindow {
   Eigen::Vector3d translateCam = Eigen::Vector3d::Zero();
   Eigen::Vector3d rotateCam = Eigen::Vector3d::Zero();
   std::vector<std::pair<Eigen::Vector3d, Eigen::Vector3d>> cameraTransforms;
-  CameraData camDataDeformMode = {
-      .rotVer = 15, .rotHor = 30, .rotPrev = Eigen::Vector2d(30, 15)};
+  CameraData camDataDeformMode{
+      /*.rotVer =*/ 15, /*.rotHor =*/ 30, /*.rotPrev =*/ Eigen::Vector2d(30, 15)};
   CameraData camData, camDataAnimateMode;
   bool &ortho = camData.ortho;
   float &rotVer = camData.rotVer;

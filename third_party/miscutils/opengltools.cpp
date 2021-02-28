@@ -1,7 +1,9 @@
 #include <iostream>
+
 #include "opengltools.h"
 #include <miscutils/fsutils.h>
 #include <unsupported/Eigen/OpenGLSupport>
+#include <GL/glew.h>
 
 using namespace std;
 using namespace Eigen;
@@ -9,7 +11,7 @@ using namespace Eigen;
 void GLMeshInitBuffers(GLMeshData &data)
 {
   // init buffers for meshes
-  glGenVertexArraysOES(1, &data.VAO);
+  glGenVertexArrays(1, &data.VAO);
   glGenBuffers(1, &data.VBO_V);
   glGenBuffers(1, &data.VBO_N);
   glGenBuffers(1, &data.VBO_T);
@@ -29,7 +31,7 @@ void GLMeshFillBuffers(GLuint program, GLMeshData &data, const MatrixXd &V, cons
   data.PARTID_converted = PARTID.cast<int>();
 
   // fill buffers
-  glBindVertexArrayOES(data.VAO);
+  glBindVertexArray(data.VAO);
   // position
   GLint id;
   glBindBuffer(GL_ARRAY_BUFFER, data.VBO_V);
@@ -81,7 +83,7 @@ void GLMeshDestroyBuffers(GLMeshData &data)
 void GLMeshDraw(GLMeshData &data, GLuint type)
 {
   // draw
-  glBindVertexArrayOES(data.VAO);
+  glBindVertexArray(data.VAO);
   if (type == GL_LINES) {
     glDrawElements(type, 2*data.F_converted.rows(), GL_UNSIGNED_INT, 0);
   } else {
@@ -102,9 +104,12 @@ void rasterizeGPUClear()
 void uploadCameraMatrices(GLuint shader, const Eigen::Matrix4d &P, const Eigen::Matrix4d &M, const Eigen::Matrix4d &normalMatrix)
 {
   glUseProgram(shader);
-  glUniform(glGetUniformLocation(shader, "view"), M.cast<float>());
-  glUniform(glGetUniformLocation(shader, "proj"), P.cast<float>());
-  glUniform(glGetUniformLocation(shader, "normalMatrix"), normalMatrix.cast<float>());
+  Eigen::Matrix4f view = M.cast<float>();
+  Eigen::Matrix4f proj = P.cast<float>();
+  Eigen::Matrix4f normal = normalMatrix.cast<float>();
+  glUniformMatrix4fv(glGetUniformLocation(shader, "view"), 1, false, reinterpret_cast<const GLfloat *>(&view));
+  glUniformMatrix4fv(glGetUniformLocation(shader, "proj"), 1, false, reinterpret_cast<const GLfloat *>(&proj));
+  glUniformMatrix4fv(glGetUniformLocation(shader, "normalMatrix"), 1, false, reinterpret_cast<const GLfloat *>(&normal));
 }
 
 GLuint loadShaders(const char *vertexShaderSrc, const char *fragmentShaderSrc){

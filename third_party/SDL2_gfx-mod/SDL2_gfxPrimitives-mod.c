@@ -4790,7 +4790,7 @@ int aaFilledEllipseColor(SDL_Renderer * renderer, float cx, float cy, float rx, 
 
 static int _gfxPrimitivesCompareFloat2(const void *a, const void *b)
 {
-	float diff = *(float *)(a + sizeof(float)) - *(float *)(b + sizeof(float)) ;
+	float diff = *(float *)((const char *)a + sizeof(float)) - *(float *)((const char *)b + sizeof(float)) ;
 	if (diff != 0.0) return (diff > 0) - (diff < 0) ;
 	diff = *(float *)a - *(float *)b ;
 	return (diff > 0) - (diff < 0) ;

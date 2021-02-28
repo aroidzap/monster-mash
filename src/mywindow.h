@@ -15,6 +15,8 @@
 #ifndef MYWINDOW_H
 #define MYWINDOW_H
 
+#include <GL/glew.h>
+
 #include <SDL.h>
 #include <image/image.h>
 
@@ -25,9 +27,6 @@
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
 #endif
-
-#define GL_GLEXT_PROTOTYPES 1
-#include <SDL_opengles2.h>
 
 struct MyCommonEvent {
   bool shiftModifier = false;

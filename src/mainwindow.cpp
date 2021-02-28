@@ -335,16 +335,16 @@ void MainWindow::drawGeometryMode(MyPainter &painterModel,
     forceRecomputeCameraCenter = false;
   }
 
-  float near = -5000;
-  float far = 10000;
+  float near_ = -5000;
+  float far_ = 10000;
   float scale2 = scale;
   if (!ortho) {
     float maxDepth =
         std::max(Vr.col(0).maxCoeff() - Vr.col(0).minCoeff(),
                  std::max(Vr.col(1).maxCoeff() - Vr.col(1).minCoeff(),
                           Vr.col(2).maxCoeff() - Vr.col(2).minCoeff()));
-    near = 500;
-    far = near + 1.5 * maxDepth;
+    near_ = 500;
+    far_ = near_ + 1.5 * maxDepth;
     scale2 *= 1.5;
   }
 
@@ -357,11 +357,11 @@ void MainWindow::drawGeometryMode(MyPainter &painterModel,
       rotVer2 = 0;
     }
     translateView2.fill(0);
-    near = -5000;
-    far = 10000;
+    near_ = -5000;
+    far_ = 10000;
   }
 
-  buildCameraMatrices(ortho, viewportW / scale2, viewportH / scale2, near, far,
+  buildCameraMatrices(ortho, viewportW / scale2, viewportH / scale2, near_, far_,
                       rotVer2, rotHor2, translateView2, centroid, glData.P,
                       glData.M);
   if (imageSpaceView) {
@@ -666,11 +666,11 @@ void MainWindow::keyPressEvent(const MyKeyEvent &keyEvent) {
     reset();
   }
   if (keyEvent.key == SDLK_s) {
-    saveProject("/tmp/mm_project.zip");
+    saveProject(datadirname + "/mm_project.zip");
   }
   if (keyEvent.key == SDLK_l) {
     changeManipulationMode(DRAW_REGION);
-    openProject("/tmp/mm_project.zip");
+    openProject(datadirname + "/mm_project.zip");
   }
   if (keyEvent.key == SDLK_h) {
     setCPsVisibility(!getCPsVisibility());
@@ -694,7 +694,7 @@ void MainWindow::keyPressEvent(const MyKeyEvent &keyEvent) {
   }
   if (keyEvent.key == SDLK_w) {
     //    exportAsOBJ("/tmp", "mm_frame", true);
-    writeOBJ("/tmp/mm_frame.obj", defData.VCurr, defData.Faces, defData.normals,
+    writeOBJ(datadirname + "/mm_frame.obj", defData.VCurr, defData.Faces, defData.normals,
              defData.Faces, MatrixXd(), defData.Faces);
   }
 #endif
@@ -1884,7 +1884,7 @@ void computeScaledImage(const T targetW, const T targetH, T &newW, T &newH,
 }
 
 void MainWindow::loadTemplateImageFromFile(bool scale) {
-  Imguc tmp = Imguc::loadImage("/tmp/template.img", 3, 4);
+  Imguc tmp = Imguc::loadImage(datadirname + "/template.png", 3, 4);
   DEBUG_CMD_MM(cout << "loadTemplateImageFromFile: " << tmp << endl;);
   if (!tmp.isNull() && tmp.w > 0 && tmp.h > 0) {
     if (scale) {
@@ -1906,7 +1906,7 @@ void MainWindow::loadTemplateImageFromFile(bool scale) {
 }
 
 void MainWindow::loadBackgroundImageFromFile(bool scale) {
-  Imguc tmp = Imguc::loadImage("/tmp/bg.img", 3, 4);
+  Imguc tmp = Imguc::loadImage(datadirname + "/bg.png", 3, 4);
   DEBUG_CMD_MM(cout << "loadBackgroundImageFromFile: " << tmp << endl;);
   if (!tmp.isNull() && tmp.w > 0 && tmp.h > 0) {
     if (scale) {

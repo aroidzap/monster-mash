@@ -15,6 +15,8 @@
 #ifndef MYPAINTER_H
 #define MYPAINTER_H
 
+#include <GL/glew.h>
+
 #include <SDL.h>
 #include <image/image.h>
 
@@ -23,8 +25,6 @@
 #include <unordered_map>
 
 #include "mywindow.h"
-#define GL_GLEXT_PROTOTYPES 1
-#include <SDL_opengles2.h>
 
 class MyPainter {
  public:

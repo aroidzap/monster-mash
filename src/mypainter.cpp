@@ -164,7 +164,7 @@ void MyPainter::drawTexture(GLuint textureName, float alpha) {
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, textureName);
   // draw
-  glBindVertexArrayOES(glData.VAO);
+  glBindVertexArray(glData.VAO);
   glDisable(GL_DEPTH_TEST);
   glDrawElements(GL_TRIANGLES, 3 * glData.F.rows(), GL_UNSIGNED_INT, 0);
   glEnable(GL_DEPTH_TEST);
@@ -185,7 +185,7 @@ void MyPainter::drawImage(int x, int y, const Imguc &I, float alpha) {
     glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, I.w, I.h, GL_RGBA, GL_UNSIGNED_BYTE,
                     I.data);
     // draw
-    glBindVertexArrayOES(glData.VAO);
+    glBindVertexArray(glData.VAO);
     glDisable(GL_DEPTH_TEST);
     glDrawElements(GL_TRIANGLES, 3 * glData.F.rows(), GL_UNSIGNED_INT, 0);
     glEnable(GL_DEPTH_TEST);

@@ -1,11 +1,15 @@
 #ifndef OPENGLTOOLS_H
 #define OPENGLTOOLS_H
 
+#ifdef WIN32
+#define NOMINMAX
+#include <windows.h>
+#endif
+
 #include <deque>
 #include <Eigen/Dense>
 #include <image/image.h>
-#define GL_GLEXT_PROTOTYPES 1
-#include <SDL_opengles2.h>
+#include <GL/glew.h>
 
 struct GLMeshData
 {
